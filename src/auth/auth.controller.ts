@@ -1,33 +1,30 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Post,
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
-import { JwtService } from '@nestjs/jwt';
+import { AuhtDto } from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) { }
 
   @Post('signup')
   async signUp(
-    @Body() signUpDto: SignUpDto,
+    @Body() authDto: AuhtDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = await this.authService.signUp(
-      signUpDto.email,
-      signUpDto.password,
-    );
+    const user = await this.authService.signUp(authDto.email, authDto.password);
     const cookie = await this.authService.getCookieWithJwtToken(user.id);
     res.setHeader('Set-cookie', cookie);
 
@@ -36,13 +33,10 @@ export class AuthController {
 
   @Post('signin')
   async signIp(
-    @Body() signUpDto: SignUpDto,
+    @Body() authDto: AuhtDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = await this.authService.signIn(
-      signUpDto.email,
-      signUpDto.password,
-    );
+    const user = await this.authService.signIn(authDto.email, authDto.password);
     const cookie = await this.authService.getCookieWithJwtToken(user.id);
     res.setHeader('Set-cookie', cookie);
 

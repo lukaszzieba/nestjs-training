@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
-export default class AppError extends Error {
+export class AppError extends Error {
   statusCode: HttpStatus;
   isOperational: boolean;
   stack: string = '';

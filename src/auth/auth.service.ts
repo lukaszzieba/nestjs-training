@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
-import AppError from 'src/utils/error/error';
+import { UsersService } from '../users/users.service';
+import { AppError } from '../utils/error/error';
 
 const SALT_ROUNDS = 10;
 
@@ -13,15 +13,15 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
-  async signUp(email: string, pwd: string): Promise<any> {
+  async signUp(email: string, pwd: string) {
     const hashedPassword = await bcrypt.hash(pwd, SALT_ROUNDS);
 
     return this.usersService.create(email, hashedPassword);
   }
 
-  async signIn(username: string, password: string): Promise<any> {
+  async signIn(username: string, password: string) {
     const user = await this.usersService.findOne(username);
     const match = await bcrypt.compare(password, user.password);
     if (!match) {

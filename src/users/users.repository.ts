@@ -1,50 +1,42 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import AppError from 'src/utils/error/error';
-
-// This should be a real class/interface representing a user entity
-export type User = { id: number; email: string; password: string };
-
-const users: User[] = [
-  {
-    id: 1,
-    email: 'john',
-    password: 'changeme',
-  },
-  {
-    id: 2,
-    email: 'maria',
-    password: 'guess',
-  },
-];
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { DbService } from '../db/db.service';
+import { PgErrorCode } from '../types/pgError';
+import { AppError, isDbError } from '../utils';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersRepository {
+  constructor(private readonly dbService: DbService) { }
+
   async create(email: string, password: string) {
-    const exist = users.some((user) => user.email === email);
+    try {
+      const dbRes = await this.dbService.runQuery(
+        `INSERT INTO app_user (email, password) VALUES ($1, $2) RETURNING *`,
+        [email, password],
+      );
 
-    if (exist) {
-      throw new AppError(HttpStatus.BAD_REQUEST, 'User already exist');
-      // throw new HttpException('udpa', HttpStatus.BAD_REQUEST);
+      return new UserDto(dbRes.rows[0]);
+    } catch (error: unknown) {
+      if (isDbError(error) && error.code === PgErrorCode.UniqueViolation) {
+        throw new AppError(HttpStatus.BAD_REQUEST, 'User already exist');
+      }
+
+      throw error;
     }
-
-    const user = {
-      id: Math.floor(Math.random() * 1000),
-      email,
-      password,
-    };
-
-    users.push(user);
-
-    return user;
   }
 
   async findOne(email: string) {
-    const user = users.find((user) => user.email === email);
+    const dbRes = await this.dbService.runQuery(
+      `SELECT *  FROM app_user WHERE email = $1`,
+      [email],
+    );
+
+    const user = dbRes.rows[0];
 
     if (!user) {
       throw new AppError(HttpStatus.NOT_FOUND, 'User not found');
     }
 
-    return user;
+    return new UserDto(user);
   }
 }
