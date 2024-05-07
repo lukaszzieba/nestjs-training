@@ -6,7 +6,7 @@ import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersRepository {
-  constructor(private readonly dbService: DbService) { }
+  constructor(private readonly dbService: DbService) {}
 
   async create(email: string, password: string) {
     try {

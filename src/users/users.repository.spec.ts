@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
 import { UsersRepository } from './users.repository';
+import { DbService } from '../db/db.service';
 
-describe('UsersService', () => {
-  let service: UsersService;
-  let runQueryMock;
+describe('UsersRepository', () => {
+  let service: UsersRepository;
+  let runQueryMock: jest.Mock;
 
   beforeEach(async () => {
     runQueryMock = jest.fn();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UsersService,
-        { provide: UsersRepository, useValue: runQueryMock },
+        UsersRepository,
+        { provide: DbService, useValue: runQueryMock },
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = module.get<UsersRepository>(UsersRepository);
   });
 
   it('should be defined', () => {
