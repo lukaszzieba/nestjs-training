@@ -5,7 +5,7 @@ import { CONNECTION_POOL } from './db.module-definition';
 @Injectable()
 export class DbService {
   private readonly logger = new Logger('SQL');
-  constructor(@Inject(CONNECTION_POOL) private readonly pool: Pool) { }
+  constructor(@Inject(CONNECTION_POOL) private readonly pool: Pool) {}
 
   async runQuery(query: string, params?: unknown[]) {
     return this.queryWithLogging(this.pool, query, params);
