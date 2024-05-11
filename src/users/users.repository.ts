@@ -39,4 +39,19 @@ export class UsersRepository {
 
     return new UserDto(user);
   }
+
+  async findOneById(id: number) {
+    const dbRes = await this.dbService.runQuery(
+      `SELECT *  FROM app_user WHERE id = $1`,
+      [id],
+    );
+
+    const user = dbRes.rows[0];
+
+    if (!user) {
+      throw new AppError(HttpStatus.NOT_FOUND, 'User not found');
+    }
+
+    return new UserDto(user);
+  }
 }

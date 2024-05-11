@@ -11,7 +11,7 @@ import { Env } from './types';
 import { envValidationSchema } from './utils';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-// import cookieParser from 'cookie-parser';
+import { ExercisesModule } from './exercises/exercises.module';
 import * as cookieParser from 'cookie-parser';
 
 @Module({
@@ -32,6 +32,7 @@ import * as cookieParser from 'cookie-parser';
     }),
     AuthModule,
     UsersModule,
+    ExercisesModule,
   ],
   providers: [
     {

@@ -1,10 +1,5 @@
 import { Exclude } from 'class-transformer';
-
-export type UserEntity = {
-  id: number;
-  email: string;
-  password: string;
-};
+import { UserEntity } from '../entities/user.entity';
 
 export class UserDto {
   id: number;

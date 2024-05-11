@@ -13,7 +13,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   async signUp(email: string, pwd: string) {
     const hashedPassword = await bcrypt.hash(pwd, SALT_ROUNDS);
@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   async getCookieWithJwtToken(userId: number) {
-    const payload = { userId };
+    const payload = { id: userId };
     const token = await this.jwtService.signAsync(payload);
 
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(

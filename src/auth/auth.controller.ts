@@ -13,11 +13,15 @@ import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { AuhtDto } from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
+import { UsersService } from 'src/users/users.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+  ) {}
 
   @Post('signup')
   async signUp(
@@ -52,7 +56,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  me(@Req() req: any) {
-    return req.user;
+  me(@Req() req: Request) {
+    return this.userService.findOneById(req.user?.id!);
   }
 }
