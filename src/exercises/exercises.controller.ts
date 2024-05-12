@@ -10,14 +10,19 @@ import {
 import { ExercisesService } from './exercises.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
+import { Roles, Role } from '../utils/authorization';
 
 @Controller('exercises')
 export class ExercisesController {
   constructor(private readonly exercisesService: ExercisesService) {}
 
   @Post()
+  @Roles(Role.ADMIN)
   create(@Body() exercise: CreateExerciseDto) {
-    return this.exercisesService.create(exercise);
+    console.log('tuu');
+    console.log(exercise);
+
+    // return this.exercisesService.create(exercise);
   }
 
   @Get()

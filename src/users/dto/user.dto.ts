@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Role } from './role';
+import { Role } from '../../utils/authorization/role';
 
 export type UserData = {
   id: number;

@@ -30,6 +30,17 @@ import * as cookieParser from 'cookie-parser';
         password: configService.get('DB_PASSWORD')!,
       }),
     }),
+    // JwtModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => ({
+    //     secret: configService.get('JWT_SECRET'),
+    //     signOptions: {
+    //       expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
+    //     },
+    //   }),
+    // }),
+
     AuthModule,
     UsersModule,
     ExercisesModule,

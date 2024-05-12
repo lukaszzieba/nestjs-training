@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { AppError } from '../utils/error/error';
-import { Role } from 'src/users/dto/role';
+import { Role } from '../utils/authorization';
 
 const SALT_ROUNDS = 10;
 
