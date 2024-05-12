@@ -29,7 +29,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = await this.authService.signUp(authDto.email, authDto.password);
-    const cookie = await this.authService.getCookieWithJwtToken(user.id);
+    const cookie = await this.authService.getCookieWithJwtToken(
+      user.id,
+      user.role.name,
+    );
     res.setHeader('Set-cookie', cookie);
 
     return user;
@@ -41,7 +44,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = await this.authService.signIn(authDto.email, authDto.password);
-    const cookie = await this.authService.getCookieWithJwtToken(user.id);
+    const cookie = await this.authService.getCookieWithJwtToken(
+      user.id,
+      user.role.name,
+    );
     res.setHeader('Set-cookie', cookie);
 
     return user;

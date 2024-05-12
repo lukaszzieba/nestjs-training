@@ -1,16 +1,39 @@
 import { Exclude } from 'class-transformer';
-import { UserEntity } from '../entities/user.entity';
+import { Role } from './role';
+
+export type UserData = {
+  id: number;
+  email: string;
+  password: string;
+  role_id: number;
+  role_name: Role;
+};
+
+export class RoleDto {
+  id: number;
+  name: Role;
+
+  constructor(id: number, name: Role) {
+    this.id = id;
+    this.name = name;
+  }
+}
 
 export class UserDto {
   id: number;
   email: string;
 
   @Exclude()
+  role: RoleDto;
+
+  @Exclude()
   password: string;
 
-  constructor(entity: UserEntity) {
-    this.id = entity.id;
-    this.email = entity.email;
-    this.password = entity.password;
+  constructor(userData: UserData) {
+    this.id = userData.id;
+    this.email = userData.email;
+    this.password = userData.password;
+
+    this.role = new RoleDto(userData.role_id, userData.role_name);
   }
 }

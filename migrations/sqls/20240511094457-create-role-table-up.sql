@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS role (
+	id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	name VARCHAR (255) NOT NULL
+);
+
+INSERT INTO role (name) VALUES ('super_admin'), ('admin'), ('user');
+
+ALTER TABLE app_user
+	ADD COLUMN role_id INTEGER NOT NULL DEFAULT 3,
+	ADD CONSTRAINT user_role_fkey FOREIGN KEY (role_id) REFERENCES role(id);
+			
+

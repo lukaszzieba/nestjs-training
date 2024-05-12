@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { AppError } from '../utils/error/error';
+import { Role } from 'src/users/dto/role';
 
 const SALT_ROUNDS = 10;
 
@@ -31,8 +32,8 @@ export class AuthService {
     return user;
   }
 
-  async getCookieWithJwtToken(userId: number) {
-    const payload = { id: userId };
+  async getCookieWithJwtToken(userId: number, role: Role) {
+    const payload = { id: userId, role };
     const token = await this.jwtService.signAsync(payload);
 
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(

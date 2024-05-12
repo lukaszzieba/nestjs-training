@@ -11,7 +11,12 @@ export class UsersRepository {
   async create(email: string, password: string) {
     try {
       const dbRes = await this.dbService.runQuery(
-        `INSERT INTO app_user (email, password) VALUES ($1, $2) RETURNING *`,
+        `
+          WITH insert_user AS (
+            INSERT INTO app_user (email, password) VALUES ($1, $2) RETURNING *
+          )    
+          SELECT u.id, u.email,  u.password, u.role_id, r.name as role_name from insert_user u JOIN role r on u.role_id = r.id; 
+        `,
         [email, password],
       );
 
@@ -27,7 +32,7 @@ export class UsersRepository {
 
   async findOne(email: string) {
     const dbRes = await this.dbService.runQuery(
-      `SELECT *  FROM app_user WHERE email = $1`,
+      `SELECT u.id, u.email, u.password, u.role_id, r.name as role_name FROM app_user u JOIN role r ON u.role_id = r.id WHERE u.email = $1`,
       [email],
     );
 
@@ -42,7 +47,7 @@ export class UsersRepository {
 
   async findOneById(id: number) {
     const dbRes = await this.dbService.runQuery(
-      `SELECT *  FROM app_user WHERE id = $1`,
+      `SELECT u.id, u.email,  u.password, u.role_id, r.name as role_name FROM app_user u JOIN role r ON u.role_id = r.id WHERE u.id = $1`,
       [id],
     );
 
